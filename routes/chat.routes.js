@@ -48,18 +48,18 @@ router.get("/chats/:eventId",(req,res,next)=>{
 
 //post a new comment in a chat
 //only if user in session is in participants array from model
-router.put("/chats/:chatId",(req,res,next)=>{
+router.put("/chats/:eventId",(req,res,next)=>{
     
-    const {chatId} = req.params
+    const {eventId} = req.params
     const newMessage = {
         message : req.body.message,
-        
+      
     }
     
 
-    Chat.findByIdAndUpdate(chatId,{$push: {"messages": newMessage}},{returnDocument:"after"})
+    Chat.findOneAndUpdate({event:eventId},{$push: {"messages": newMessage}},{returnDocument:"after"})
         .then(responseChat=>{
-            console.log(responseChat)
+            console.log("a message was created===>",responseChat.messages.slice(-1)[0].message)
             res.json(responseChat)
         })
         .catch(error=>{
