@@ -28,7 +28,7 @@ router.get("/events", (req, res, next) => {
 router.get("/events/:eventId", (req, res, next) => {
     const {eventId} = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
         res.status(400).json({ message: "Specified id is not valid" });
         return;
     }
