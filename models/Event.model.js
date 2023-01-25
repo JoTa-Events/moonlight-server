@@ -13,6 +13,10 @@ const eventSchema = new Schema(
         type: Schema.Types.ObjectId, 
         ref: 'User'
     }],
+    chat: { 
+      type: Schema.Types.ObjectId, 
+      ref: 'Chat'
+    },
     author: { 
         type: Schema.Types.ObjectId, 
         ref: 'User'
@@ -24,6 +28,4 @@ const eventSchema = new Schema(
   }
 );
 
-const Event = model("Event", eventSchema);
-
-module.exports = Event;
+module.exports = model("Event", eventSchema);
