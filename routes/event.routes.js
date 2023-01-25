@@ -6,9 +6,9 @@ const User = require('../models/User.model');
 
 // POST: creating a new event
 router.post("/events", (req, res, next) => {
-    const {title, date, location, description, participants, chat, author} = req.body;
+    const {title, date, location, description, participants, author} = req.body;
     
-    Event.create({title, date, location, description, participants, chat, author})
+    Event.create({title, date, location, description, participants,author})
         .then((response) => res.json(response))
         .catch(error => {
             console.log("Error creating new event", err);

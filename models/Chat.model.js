@@ -8,11 +8,13 @@ const chatSchema = new Schema(
             required: true
         },
         author: { 
+            // type:String
             type: Schema.Types.ObjectId, 
             ref: 'User'
         },
         date: {
-            type: Date.now()
+            type: Date,
+            default: new Date()
         }
     }],
     event: { 
