@@ -34,7 +34,7 @@ router.get("/chats/:eventId",(req,res,next)=>{
 
     Chat.findOne({ event: eventId })
         .then(responseChat=>{
-            console.log("chat found for event==>",responseChat.event)
+            console.log("chat found for event==>",responseChat?.event)
             res.json(responseChat)
         })
         .catch(error=>{
