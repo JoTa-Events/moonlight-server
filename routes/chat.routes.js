@@ -34,7 +34,7 @@ router.get("/chats/:eventId",(req,res,next)=>{
 
     Chat.findOne({ event: eventId })
         .then(responseChat=>{
-            console.log("chat found==>",responseChat)
+            console.log("chat found for event==>",responseChat.event)
             res.json(responseChat)
         })
         .catch(error=>{
@@ -53,6 +53,7 @@ router.put("/chats/:eventId",(req,res,next)=>{
     const {eventId} = req.params
     const newMessage = {
         message : req.body.message,
+        author:req.body.userId
       
     }
     
