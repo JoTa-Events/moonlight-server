@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
-
+const Chat =require('../models/Chat.model')
 const Event = require('../models/Event.model');
 const User = require('../models/User.model');
 
@@ -9,9 +9,16 @@ router.post("/events", (req, res, next) => {
     const {title, date, location, description, participants, author} = req.body;
     
     Event.create({title, date, location, description, participants,author})
-        .then((response) => res.json(response))
+        .then((responseEvent) => {
+            console.log("event created===============>",responseEvent.title)
+            return Chat.create({event:responseEvent._id})  
+        })
+        .then(responseChat=>{
+            console.log(`chat created==================>`,responseChat._id)
+            res.json(responseChat)
+        })
         .catch(error => {
-            console.log("Error creating new event", err);
+            console.log("Error creating new event", error);
             res.status(500).json(error)
         });
 })
