@@ -28,12 +28,13 @@ router.post("/chats",(req,res,next)=>{
 
 // get the chat for one event ==> /chats/:eventId
 // only if user in session is in participants array from model
-router.get("/chats/:chatId",(req,res,next)=>{
+router.get("/chats/:eventId",(req,res,next)=>{
     
-    const {chatId} = req.params
+    const eventId = req.params.eventId
 
-    Chat.findById(chatId)
+    Chat.findOne({ event: eventId })
         .then(responseChat=>{
+            console.log("chat found==>",responseChat)
             res.json(responseChat)
         })
         .catch(error=>{
