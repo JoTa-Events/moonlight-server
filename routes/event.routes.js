@@ -84,8 +84,8 @@ router.put("/events/:eventId/participants", isAuthenticated, (req, res, next) =>
     const {eventId} = req.params;
 
     const userId = req.body.userId;
-
-    Event.findOneAndUpdate({_id:eventId}, {$push: {"participants": userId}})
+    // Event.findOneAndUpdate({_id:eventId}, {$push: {"participants": userId}})
+    Event.findOneAndUpdate({ _id: eventId }, { $addToSet: { "participants": userId } })
         .then(response => {
             res.json(response)
         })
