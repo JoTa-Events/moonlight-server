@@ -11,8 +11,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 
 //create  a chat ==> /chat/:eventId
-
-//only if user in session === author of event
+//only if user in session === author of event (still for implement)
 router.post("/chats",isAuthenticated,(req,res,next)=>{
     const newChat = {
         event: req.body.eventId
@@ -38,6 +37,7 @@ router.get("/chats/:eventId",isAuthenticated,(req,res,next)=>{
     Chat.findOne({ event: eventId }).populate("event")
         .then(responseChat=>{
 
+            
             const isUserAParticipant = responseChat.event.participants.some(participantId=>(participantId.toString()===req.payload._id.toString()))
             
             if(isUserAParticipant){
@@ -69,7 +69,7 @@ router.put("/chats/:eventId",isAuthenticated,(req,res,next)=>{
         author: req.body.userId
       
     }
-    // console.log(req.payload.username," can post a comment")
+   
     
     Chat.findOneAndUpdate({event:eventId},{$push: {"messages": newMessage}},{returnDocument:"after"})
         .then(responseChat=>{

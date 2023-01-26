@@ -95,7 +95,7 @@ router.put("/events/:eventId/participants", isAuthenticated, (req, res, next) =>
         })
 })
 
-// DELETE: Deleting a specific event by it's id
+// DELETE: Deleting a specific event by id
 router.delete("/events/:eventId",isAuthenticated, (req, res, next) => {
     const { eventId } = req.params;
 
@@ -108,17 +108,25 @@ router.delete("/events/:eventId",isAuthenticated, (req, res, next) => {
       .then((responseEvent) => {
         
         if(responseEvent===null){
+
             console.log(`${req.payload.username} with id ${req.payload._id} has not the credentials to delete this event`)
+
             res.json({
                 message:"only the creator of the event can  delete it"
             })
-        }else{
-            res.json({
-              message: `This event with id: ${eventId}, has been removed successfully.`,
-            });
-
+            return null
         }
-      })
+        
+        
+        return Chat.findOneAndDelete({event:eventId})  
+        })
+        .then(responseChat=>{
+            if(responseChat===null) return 
+            
+            res.json({
+                message: `This event and its chat with id: ${eventId}, have been removed successfully..`,
+              });
+        })
       .catch((error) => {
         console.log("Error deleting an event", error);
         res.status(500).json(error);
