@@ -9,14 +9,14 @@ const fileUploader = require("../config/cloudinary.config");
 // POST: creating a new event
 router.post("/events",isAuthenticated,(req, res, next) => {
     const {title, date, country, city, description, participants, author, image} = req.body;
-    console.log(`esto es lo que se esta creando`,req.body)
+
     Event.create({title, date, country, city, description, participants, author, image})
         .then((responseEvent) => {
-            console.log("event created===============>",responseEvent.title)
+            console.log("This event has been created:",responseEvent.title)
             return Chat.create({event:responseEvent._id})
         })
         .then(responseChat=>{
-            console.log(`chat created==================>`,responseChat._id)
+            console.log(`This chat has been created`,responseChat._id)
             res.json(responseChat)
         })
         .catch(error => {
@@ -95,8 +95,7 @@ router.put("/events/:eventId/participants", isAuthenticated, (req, res, next) =>
     const {eventId} = req.params;
 
     const userId = req.body.userId;
-
-    Event.findOneAndUpdate({_id:eventId}, {$push: {"participants": userId}})
+    Event.findOneAndUpdate({ _id: eventId }, { $addToSet: { "participants": userId } })
         .then(response => {
             res.json(response)
         })
@@ -121,7 +120,7 @@ router.delete("/events/:eventId",isAuthenticated, (req, res, next) => {
         if(responseEvent===null){
             console.log(`${req.payload.username} with id ${req.payload._id} has not the credentials to delete this event`)
             res.json({
-                message:"only the creator of the event can  delete it"
+                message:"Only the creator of event can delete it"
             })
         }else{
             res.json({
