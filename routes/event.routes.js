@@ -60,19 +60,20 @@ router.put("/events/:eventId",isAuthenticated, (req, res, next) => {
       .then((updatedEvent) => {
         
         if(updatedEvent===null){
+            console.log(`${req.payload.username} with id ${req.payload._id} has not the credentials to update this event`)
             res.json({
                 message:"only the creator of the event can  update it"
             })
         }else{
             res.json({
-              message: `This event with id: ${eventId}, has been removed successfully.`,
+              message: `This event with id: ${eventId}, has been updated successfully.`,
             });
 
         }
-        res.json(updatedEvent)
+       
     })
       .catch(error => {
-        console.log("Error updating an event", err);
+        console.log("Error updating an event", error);
         res.status(500).json(error)
     });
 });
@@ -106,6 +107,7 @@ router.delete("/events/:eventId",isAuthenticated, (req, res, next) => {
       .then((responseEvent) => {
         
         if(responseEvent===null){
+            console.log(`${req.payload.username} with id ${req.payload._id} has not the credentials to delete this event`)
             res.json({
                 message:"only the creator of the event can  delete it"
             })
