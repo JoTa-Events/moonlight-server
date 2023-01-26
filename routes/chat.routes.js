@@ -7,6 +7,8 @@ const User = require("../models/User.model")
 const Event = require("../models/Event.model")
 
 
+const { isAuthenticated } = require("../middleware/jwt.middleware.js");
+
 
 //create  a chat ==> /chat/:eventId
 
@@ -28,13 +30,14 @@ router.post("/chats",(req,res,next)=>{
 
 // get the chat for one event ==> /chats/:eventId
 // only if user in session is in participants array from model
-router.get("/chats/:eventId",(req,res,next)=>{
+router.get("/chats/:eventId",isAuthenticated,(req,res,next)=>{
+
     
     const eventId = req.params.eventId
 
     Chat.findOne({ event: eventId })
         .then(responseChat=>{
-            console.log("chat found for event==>",responseChat?.event)
+            console.log(req.payload.username," has access to the chat for event==>",responseChat?.event)
             res.json(responseChat)
         })
         .catch(error=>{
@@ -48,19 +51,19 @@ router.get("/chats/:eventId",(req,res,next)=>{
 
 //post a new comment in a chat
 //only if user in session is in participants array from model
-router.put("/chats/:eventId",(req,res,next)=>{
+router.put("/chats/:eventId",isAuthenticated,(req,res,next)=>{
     
     const {eventId} = req.params
     const newMessage = {
         message : req.body.message,
-        author:req.body.userId
+        author: req.body.userId
       
     }
+    // console.log(req.payload.username," can post a comment")
     
-
     Chat.findOneAndUpdate({event:eventId},{$push: {"messages": newMessage}},{returnDocument:"after"})
         .then(responseChat=>{
-            console.log("a message was created===>",responseChat.messages.slice(-1)[0].message)
+            console.log(`a message was created by ${req.payload.username}===>`,responseChat.messages.slice(-1)[0].message)
             res.json(responseChat)
         })
         .catch(error=>{
@@ -71,7 +74,7 @@ router.put("/chats/:eventId",(req,res,next)=>{
 
 // delete the chat when the event is deleted
 // only if user in session === author of event
-router.delete("/chats/:chatId",(req,res,next)=>{
+router.delete("/chats/:chatId",isAuthenticated,(req,res,next)=>{
 
     const {chatId} = req.params
 
@@ -89,7 +92,7 @@ router.delete("/chats/:chatId",(req,res,next)=>{
 
 //delete message in a chat
 //only if user in session === author of event
-router.put("/chats/:eventId/:commentId",(req,res,next)=>{
+router.put("/chats/:eventId/:commentId",isAuthenticated,(req,res,next)=>{
     
     const {eventId,commentId}=req.params
     res.json({message: "not implemented"})
