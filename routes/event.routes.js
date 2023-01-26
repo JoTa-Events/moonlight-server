@@ -4,13 +4,13 @@ const Chat =require('../models/Chat.model')
 const Event = require('../models/Event.model');
 const User = require('../models/User.model');
 const { isAuthenticated } =require('../middleware/jwt.middleware')
-
+const fileUploader = require("../config/cloudinary.config");
 
 // POST: creating a new event
 router.post("/events",isAuthenticated,(req, res, next) => {
-    const {title, date, country, city, description, participants, author} = req.body;
+    const {title, date, country, city, description, participants, author, image} = req.body;
     console.log(`esto es lo que se esta creando`,req.body)
-    Event.create({title, date, country, city, description, participants, author})
+    Event.create({title, date, country, city, description, participants, author, image})
         .then((responseEvent) => {
             console.log("event created===============>",responseEvent.title)
             return Chat.create({event:responseEvent._id})
@@ -24,6 +24,18 @@ router.post("/events",isAuthenticated,(req, res, next) => {
             res.status(500).json(error)
         });
 })
+
+// POST CLOUDINARY: route that will receive an image, send it to Cloudinary via the fileUploader and return the image URL
+router.post("/upload", fileUploader.single("image"), (req, res, next) => {
+    console.log("file is: ", req.file);
+  
+    if (!req.file) {
+      next(new Error("No file uploaded!"));
+      return;
+    }
+  
+    res.json({ fileUrl: req.file.path });
+  });
 
 // GET: displaying list of events
 router.get("/events", (req, res, next) => {
