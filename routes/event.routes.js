@@ -77,6 +77,22 @@ router.put("/events/:eventId",isAuthenticated, (req, res, next) => {
     });
 });
 
+// PUT: updating the array of participants of the event
+router.put("/events/:eventId/participants", isAuthenticated, (req, res, next) => {
+    const {eventId} = req.params;
+
+    const userId = req.body.userId;
+
+    Event.findOneAndUpdate({_id:eventId}, {$push: {"participants": userId}})
+        .then(response => {
+            res.json(response)
+        })
+        .catch(error=>{
+            console.log(error)
+            res.status(500).json(error)
+        })
+})
+
 // DELETE: Deleting a specific event by it's id
 router.delete("/events/:eventId",isAuthenticated, (req, res, next) => {
     const { eventId } = req.params;
