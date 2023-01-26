@@ -34,14 +34,16 @@ router.get("/chats/:eventId",isAuthenticated,(req,res,next)=>{
     
     const eventId = req.params.eventId
 
-    Chat.findOne({ event: eventId }).populate("event")
+    Chat.findOne({ event: eventId })
+        .populate({path: "event",select:"participants title"})
+        .populate({path:"messages.author",select:"username"})
         .then(responseChat=>{
-
-            
+           
             const isUserAParticipant = responseChat.event.participants.some(participantId=>(participantId.toString()===req.payload._id.toString()))
             
             if(isUserAParticipant){
                 console.log(req.payload.username," has access to the chat for event==>",responseChat?.event.title)
+                
                 res.json(responseChat)
             }else{
                 console.log(req.payload.username," is not a participant of this event==>",responseChat?.event.title)
@@ -102,9 +104,9 @@ router.delete("/chats/:chatId",isAuthenticated,(req,res,next)=>{
 
 //delete message in a chat
 //only if user in session === author of event
-router.put("/chats/:eventId/:commentId",isAuthenticated,(req,res,next)=>{
+router.put("/chats/:eventId/:messageId",isAuthenticated,(req,res,next)=>{
     
-    const {eventId,commentId}=req.params
+    const {eventId,messageId}=req.params
     res.json({message: "not implemented"})
 })
 
