@@ -6,10 +6,9 @@ const User = require('../models/User.model');
 const { isAuthenticated } =require('../middleware/jwt.middleware')
 // POST: creating a new event
 router.post("/events",isAuthenticated,(req, res, next) => {
-
-    const {title, date, location, description, participants, author} = req.body;
+    const {title, date, country, city, description, participants, author} = req.body;
     
-    Event.create({title, date, location, description, participants,author})
+    Event.create({title, date, country, city, description, participants, author})
         .then((responseEvent) => {
             console.log("event created===============>",responseEvent.title)
             return Chat.create({event:responseEvent._id})  
