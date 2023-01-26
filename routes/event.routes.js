@@ -3,9 +3,10 @@ const mongoose = require("mongoose");
 const Chat =require('../models/Chat.model')
 const Event = require('../models/Event.model');
 const User = require('../models/User.model');
-
+const { isAuthenticated } =require('../middleware/jwt.middleware')
 // POST: creating a new event
-router.post("/events", (req, res, next) => {
+router.post("/events",isAuthenticated,(req, res, next) => {
+
     const {title, date, location, description, participants, author} = req.body;
     
     Event.create({title, date, location, description, participants,author})
@@ -46,7 +47,7 @@ router.get("/events/:eventId", (req, res, next) => {
 })
 
 // PUT: updating a specific event by it's id
-router.put("/events/:eventId", (req, res, next) => {
+router.put("/events/:eventId",isAuthenticated, (req, res, next) => {
     const { eventId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
@@ -63,7 +64,7 @@ router.put("/events/:eventId", (req, res, next) => {
 });
   
 // DELETE: Deleting a specific event by it's id
-router.delete("/events/:eventId", (req, res, next) => {
+router.delete("/events/:eventId",isAuthenticated, (req, res, next) => {
     const { eventId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
@@ -72,15 +73,15 @@ router.delete("/events/:eventId", (req, res, next) => {
     }
   
     Event.findByIdAndRemove(eventId)
-        .then(() =>
-            res.json({
-                message: `This event with id: ${eventId}, has been removed successfully.`,
-            })
-        )
-        .catch(error => {
-            console.log("Error deleting an event", error);
-            res.status(500).json(error)
+      .then(() => {
+        res.json({
+          message: `This event with id: ${eventId}, has been removed successfully.`,
         });
+      })
+      .catch((error) => {
+        console.log("Error deleting an event", error);
+        res.status(500).json(error);
+      });
 });
 
 module.exports = router;
