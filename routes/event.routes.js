@@ -4,15 +4,11 @@ const Chat =require('../models/Chat.model')
 const Event = require('../models/Event.model');
 const User = require('../models/User.model');
 
-// require arrays with list of countries and it's capitals
-const countryArr = require("../data/countries");
-const capitalArr = require("../data/capitalCity");
-
 // POST: creating a new event
 router.post("/events", (req, res, next) => {
     const {title, date, country, city, description, participants, author} = req.body;
     
-    Event.create({title, date, country, city, description, participants,author})
+    Event.create({title, date, country, city, description, participants, author})
         .then((responseEvent) => {
             console.log("event created===============>",responseEvent.title)
             return Chat.create({event:responseEvent._id})  
