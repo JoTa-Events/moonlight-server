@@ -13,6 +13,7 @@ router.post("/events",isAuthenticated,(req, res, next) => {
     
     Event.create({title, date, country, city, description, participants, author})
         .then((responseEvent) => {
+            
             console.log("event created===============>",responseEvent.title)
             return Chat.create({event:responseEvent._id})
         })
@@ -29,8 +30,11 @@ router.post("/events",isAuthenticated,(req, res, next) => {
 // GET: displaying list of events
 router.get("/events", (req, res, next) => {
 
-    Event.find()
-        .then((allEvents) => res.json(allEvents))
+    Event.find().populate({path:"author",select:"username"})
+        .then((allEvents) => {
+          
+            res.json(allEvents)
+        })
         .catch((error) => res.json(error))
 })
 
@@ -43,7 +47,7 @@ router.get("/events/:eventId", (req, res, next) => {
         return;
     }
 
-    Event.findById(eventId)
+    Event.findById(eventId).populate({path:"author",select:"username"})
         .then((event) => res.status(200).json(event))
         .catch((error) => res.json(error));
 })
