@@ -8,8 +8,9 @@ const { isAuthenticated } =require('../middleware/jwt.middleware')
 
 // POST: creating a new event
 router.post("/events",isAuthenticated,(req, res, next) => {
+    
     const {title, date, country, city, description, participants, author} = req.body;
-    console.log(`esto es lo que se esta creando`,req.body)
+    
     Event.create({title, date, country, city, description, participants, author})
         .then((responseEvent) => {
             console.log("event created===============>",responseEvent.title)

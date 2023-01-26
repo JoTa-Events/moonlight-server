@@ -13,7 +13,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 //create  a chat ==> /chat/:eventId
 
 //only if user in session === author of event
-router.post("/chats",(req,res,next)=>{
+router.post("/chats",isAuthenticated,(req,res,next)=>{
     const newChat = {
         event: req.body.eventId
     }
