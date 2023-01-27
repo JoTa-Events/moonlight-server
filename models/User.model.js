@@ -20,6 +20,7 @@ const userSchema = new Schema(
       trim:true,
       required: [true, "username is required."],
     },
+    avatar: String
   },
   {
     timestamps: true,
