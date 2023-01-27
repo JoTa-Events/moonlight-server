@@ -12,11 +12,11 @@ router.post("/events",isAuthenticated,(req, res, next) => {
 
     Event.create({title, date, country, city, description, participants, author, image})
         .then((responseEvent) => {
-            console.log("This event has been created:",responseEvent.title)
+            console.log("event created===============>", responseEvent.title)
             return Chat.create({event:responseEvent._id})
         })
         .then(responseChat=>{
-            console.log(`This chat has been created`,responseChat._id)
+            console.log(`This chat has been created`, responseChat._id)
             res.json(responseChat)
         })
         .catch(error => {
@@ -40,8 +40,10 @@ router.post("/upload", fileUploader.single("image"), (req, res, next) => {
 // GET: displaying list of events
 router.get("/events", (req, res, next) => {
 
-    Event.find()
-        .then((allEvents) => res.json(allEvents))
+    Event.find().populate({path:"author",select:"username"})
+        .then((allEvents) => {
+            res.json(allEvents)
+        })
         .catch((error) => res.json(error))
 })
 
@@ -54,7 +56,7 @@ router.get("/events/:eventId", (req, res, next) => {
         return;
     }
 
-    Event.findById(eventId)
+    Event.findById(eventId).populate({path:"author",select:"username"})
         .then((event) => res.status(200).json(event))
         .catch((error) => res.json(error));
 })
@@ -105,7 +107,7 @@ router.put("/events/:eventId/participants", isAuthenticated, (req, res, next) =>
         })
 })
 
-// DELETE: Deleting a specific event by it's id
+// DELETE: Deleting a specific event by id
 router.delete("/events/:eventId",isAuthenticated, (req, res, next) => {
     const { eventId } = req.params;
 
@@ -118,17 +120,25 @@ router.delete("/events/:eventId",isAuthenticated, (req, res, next) => {
       .then((responseEvent) => {
         
         if(responseEvent===null){
+
             console.log(`${req.payload.username} with id ${req.payload._id} has not the credentials to delete this event`)
+
             res.json({
                 message:"Only the creator of event can delete it"
             })
-        }else{
-            res.json({
-              message: `This event with id: ${eventId}, has been removed successfully.`,
-            });
-
+            return null
         }
-      })
+        
+        
+        return Chat.findOneAndDelete({event:eventId})  
+        })
+        .then(responseChat=>{
+            if(responseChat===null) return 
+            
+            res.json({
+                message: `This event and its chat with id: ${eventId}, have been removed successfully..`,
+              });
+        })
       .catch((error) => {
         console.log("Error deleting an event", error);
         res.status(500).json(error);
