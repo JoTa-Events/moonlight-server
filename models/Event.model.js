@@ -11,11 +11,15 @@ const eventSchema = new Schema(
         required: true,
         trim:true
     },
-    date: String,
+    date:{
+      type: Date,
+      required:true
+    },
     country: String,
     city: String,
     description:{
       type:String,
+      required:true,
       trim:true
     },
     participants: [{ 
