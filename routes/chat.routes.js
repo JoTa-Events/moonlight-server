@@ -12,20 +12,20 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 //create  a chat ==> /chat/:eventId
 //only if user in session === author of event (still for implement)
-router.post("/chats",isAuthenticated,(req,res,next)=>{
-    const newChat = {
-        event: req.body.eventId
-    }
-    Chat.create(newChat)
-        .then(responseChat=>{
-            res.json(responseChat)
-        })
-        .catch(error=>{
-            console.log(`something happened creating a chat`,error)
-            res.status(500).json(error)
-        })
+// router.post("/chats",isAuthenticated,(req,res,next)=>{
+//     const newChat = {
+//         event: req.body.eventId
+//     }
+//     Chat.create(newChat)
+//         .then(responseChat=>{
+//             res.json(responseChat)
+//         })
+//         .catch(error=>{
+//             console.log(`something happened creating a chat`,error)
+//             res.status(500).json(error)
+//         })
     
-})
+// })
 
 // get the chat for one event ==> /chats/:eventId
 // only if user in session is in participants array from model
