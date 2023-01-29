@@ -8,25 +8,32 @@ const router =express.Router()
 router.get("/profile/:username",(req,res,next)=>{
     const {username}=req.params
 
-    User.findOne({"username": username})
+    let data ={}
+
+    User.findOne({"username": username},{"password":0,"email":0})
         .then(responseUser=>{
-           
+
             if(!responseUser){               
                 
-                res.status(404).send(`Oops! The user "${username}" doesn't seem to exist in our system. Please check the username and try again.`)
+                res.status(401).json({message:`Oops! The user "${username}" doesn't seem to exist in our system. Please check the username and try again.`})
+                
                 return
             }
+
+            data={author:responseUser}
+
            return Event.find({"author":responseUser._id},{"participants":0}) 
         })
         .then(responseEvent=>{
-
             //this response does not include the array of participants
-            res.json(responseEvent)
+            
+            data={...data,events:responseEvent}
+            res.json(data)
         })
         .catch(error=>{
-            console.log('an error ocurred while getting the data from ${username}',error)
+            console.log(`an error ocurred while getting the data from ${username}`)
             
-            res.json(error)
+           return next(error);
         })
 })
 module.exports=router
