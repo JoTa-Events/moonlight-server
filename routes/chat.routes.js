@@ -42,7 +42,7 @@ router.get("/chats/:eventId",isAuthenticated,(req,res,next)=>{
             const isUserAParticipant = responseChat.event.participants.some(participantId=>(participantId.toString()===req.payload._id.toString()))
             
             if(isUserAParticipant){
-                console.log(req.payload.username," has access to the chat for event==>",responseChat?.event.title)
+                // console.log(req.payload.username," has access to the chat for event==>",responseChat?.event.title)
                 
                 res.json(responseChat)
             }else{
@@ -75,7 +75,7 @@ router.put("/chats/:eventId",isAuthenticated,(req,res,next)=>{
     
     Chat.findOneAndUpdate({event:eventId},{$push: {"messages": newMessage}},{returnDocument:"after"})
         .then(responseChat=>{
-            console.log(`a message was created by ${req.payload.username}===>`,responseChat.messages.slice(-1)[0].message)
+            // console.log(`a message was created by ${req.payload.username}===>`,responseChat.messages.slice(-1)[0].message)
             res.json(responseChat)
         })
         .catch(error=>{
