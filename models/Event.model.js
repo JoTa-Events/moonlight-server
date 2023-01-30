@@ -12,8 +12,7 @@ const eventSchema = new Schema(
       type: Date,
       required:true
     },
-    country: String,
-    city: String,
+    location,
     description:{
       type:String,
       required:true,

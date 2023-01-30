@@ -8,9 +8,9 @@ const fileUploader = require("../config/cloudinary.config");
 
 // POST: creating a new event
 router.post("/events",isAuthenticated,(req, res, next) => {
-    const {title, date, country, city, description, participants, author, image} = req.body;
+    const {title, date, location, description, participants, author, image} = req.body;
 
-    Event.create({title, date, country, city, description, participants, author, image})
+    Event.create({title, date, location, description, participants, author, image})
         .then((responseEvent) => {
             console.log("event created===============>", responseEvent.title)
             return Chat.create({event:responseEvent._id})
