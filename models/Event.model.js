@@ -2,7 +2,6 @@ const { Schema, model } = require("mongoose");
 
 const eventSchema = new Schema(
   {
-    image: String,
     title: {
         type: String,
         required: true,
@@ -12,13 +11,21 @@ const eventSchema = new Schema(
       type: Date,
       required:true
     },
-    country: String,
-    city: String,
+    location: {
+      type: {
+        type: String, 
+        default: "Point"
+      },
+      coordinates: {
+        type: [Number]
+      }
+    },
     description:{
       type:String,
       required:true,
       trim:true
     },
+    image: String,
     participants: [{ 
         type: Schema.Types.ObjectId, 
         ref: 'User'
@@ -27,7 +34,6 @@ const eventSchema = new Schema(
         type: Schema.Types.ObjectId, 
         ref: 'User'
     }
-
   },
   {
     timestamps: true,
