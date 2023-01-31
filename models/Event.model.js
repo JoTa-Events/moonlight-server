@@ -18,7 +18,8 @@ const eventSchema = new Schema(
       },
       coordinates: {
         type: [Number]
-      }
+      },
+      city: String
     },
     description:{
       type:String,
