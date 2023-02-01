@@ -95,10 +95,26 @@ router.put("/events/:eventId",isAuthenticated, (req, res, next) => {
 // PUT: updating the array of participants of the event
 router.put("/events/:eventId/participants", isAuthenticated, (req, res, next) => {
     const {eventId} = req.params;
-
+    
     const userId = req.body.userId;
     Event.findOneAndUpdate({ _id: eventId }, { $addToSet: { "participants": userId } }, {new:true})
         .then(response => {
+            res.json(response)
+        })
+        .catch(error=>{
+            console.log(error)
+            res.status(500).json(error)
+        })
+})
+
+//DELETE: remove the userId from the participants array in an event
+router.delete("/events/:eventId/participants", isAuthenticated, (req, res, next) => {
+    const {eventId} = req.params;
+
+    const userId = req.payload._id;
+    Event.findOneAndUpdate({ _id: eventId }, { $pull: { "participants": userId } }, {new:true})
+        .then(response => {
+            
             res.json(response)
         })
         .catch(error=>{
