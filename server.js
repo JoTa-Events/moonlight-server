@@ -32,20 +32,20 @@ io.on("connection",(socket)=>{
 
   // receive data (eventId)
   socket.on("joinChat",(data)=>{
-
+    
+    console.log("======> User with socket.id:",socket.id," join Chat: ",data)
     // create a chatRoom, eventId
     socket.join(data)
-
-    console.log(" User with socket.id:",socket.id," join Chat: ",data)
+    
   })
 
   //"on" receive data 
   socket.on("serverListens",(data)=>{
-
+    
+    console.log(data.author,":",data.message,":",data.eventId,",",data.date)
     //"emit"  send data back to everyone(but the sender) in the chatRoom eventId
     socket.to(data.eventId).emit("clientListens",(data))
 
-    console.log(data.author,":",data.message,":",data.eventId,",",data.date)
      
 
   })
