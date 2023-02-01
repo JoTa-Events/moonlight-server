@@ -26,7 +26,7 @@ io.on("connection",(socket)=>{
 
   
 
-  console.log("user connected",socket.id);
+  console.log("User connected",socket.id);
 
   // receive data (eventId)
   socket.on("joinChat",(data)=>{
