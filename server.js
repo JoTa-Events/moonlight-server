@@ -46,7 +46,9 @@ io.on("connection",(socket)=>{
     //"emit"  send data back to everyone(but the sender) in the chatRoom eventId
     socket.to(data.eventId).emit("clientListens",(data))
 
-     
+    socket.on("leaveChat",(data)=>{
+      console.log(`=====>user with socket.id:${socket.id},leave the chat:  ${data}`)
+    })
 
   })
 
