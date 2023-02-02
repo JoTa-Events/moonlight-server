@@ -20,9 +20,15 @@ router.post("/events",isAuthenticated,(req, res, next) => {
             res.json(responseChat)
         })
         .catch(error => {
-            console.log("Error creating new event", error);
-            res.status(500).json(error)
+            if(error?.code === 16755){
+                res.status(401).json({ message: "Service not available in this location" });
+            } else {
+                console.log("Error creating new event", error);
+                res.status(500).json(error)
+            }
+
         });
+
 })
 
 // POST CLOUDINARY: route that will receive an image, send it to Cloudinary via the fileUploader and return the image URL
@@ -87,8 +93,12 @@ router.put("/events/:eventId",isAuthenticated, (req, res, next) => {
        
     })
       .catch(error => {
-        console.log("Error updating an event", error);
-        res.status(500).json(error)
+        if(error?.code === 16755){
+            res.status(401).json({ message: "Service not available in this location" });
+        } else {
+            console.log("Error updating an event", error);
+            res.status(500).json(error)
+        }
     });
 });
 
