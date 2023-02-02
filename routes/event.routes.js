@@ -56,7 +56,7 @@ router.get("/events/:eventId", (req, res, next) => {
         return;
     }
 
-    Event.findById(eventId).populate({path:"author",select:"username"})
+    Event.findById(eventId).populate({path:"author",select:"username avatar"})
         .then((event) => res.status(200).json(event))
         .catch((error) => res.json(error));
 })
