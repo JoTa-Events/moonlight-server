@@ -21,7 +21,7 @@ router.post("/events",isAuthenticated,(req, res, next) => {
         })
         .catch(error => {
             if(error?.code === 16755){
-                res.status(401).json({ message: "Service not available in this location" });
+                res.status(400).json({ message: "Service not available in this location" });
             } else {
                 console.log("Error creating new event", error);
                 res.status(500).json(error)
@@ -94,7 +94,7 @@ router.put("/events/:eventId",isAuthenticated, (req, res, next) => {
     })
       .catch(error => {
         if(error?.code === 16755){
-            res.status(401).json({ message: "Service not available in this location" });
+            res.status(400).json({ message: "Service not available in this location" });
         } else {
             console.log("Error updating an event", error);
             res.status(500).json(error)
