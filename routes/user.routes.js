@@ -1,52 +1,46 @@
-const { response } = require("express")
-const express = require("express")
-const { isAuthenticated } = require("../middleware/jwt.middleware")
-const Chat = require("../models/Chat.model")
-const Event = require("../models/Event.model")
-const User = require("../models/User.model")
-const router =express.Router()
+const { response } = require("express");
+const express = require("express");
+const { isAuthenticated } = require("../middleware/jwt.middleware");
+const Chat = require("../models/Chat.model");
+const Event = require("../models/Event.model");
+const User = require("../models/User.model");
+const router = express.Router();
 
-router.get("/my-profile",isAuthenticated,(req,res,next)=>{
-        
-    const userId=req.payload._id
-    User.findById(userId)
-        .then(responseUser=>{
-            res.json(responseUser)
-        })
-        .catch(error=>{
-            console.log("error getting the user details",error)
-            res.status(500).json(error)
-        })
-})
-router.put("/my-profile",isAuthenticated,(req,res,next)=>{
+router.get("/my-profile", isAuthenticated, (req, res, next) => {
+  const userId = req.payload._id;
+  User.findById(userId)
+    .then((responseUser) => {
+      res.json(responseUser);
+    })
+    .catch((error) => {
+      console.log("error getting the user details", error);
+      res.status(500).json(error);
+    });
+});
+router.put("/my-profile", isAuthenticated, (req, res, next) => {
+  const userId = req.payload._id;
+  const { avatar } = req.body;
 
-    const userId=req.payload._id
-    const {avatar}=req.body
-   
-    User.findByIdAndUpdate(userId,{avatar})
-        .then(responseUser=>{
-           
-            res.json(responseUser)
-        })
-        .catch(error=>{
-            console.log("error updating the user details",error)
-            res.status(500).json(error)
-        })
-
- })
-router.get("/profile/:username",(req,res,next)=>{
-    const {username}=req.params
+  User.findByIdAndUpdate(userId, { avatar })
+    .then((responseUser) => {
+      res.json(responseUser);
+    })
+    .catch((error) => {
+      console.log("error updating the user details", error);
+      res.status(500).json(error);
+    });
+});
+router.get("/profile/:username", (req, res, next) => {
+  const { username } = req.params;
 
   let data = {};
 
   User.findOne({ username: username }, { password: 0, email: 0 })
     .then((responseUser) => {
       if (!responseUser) {
-        res
-          .status(401)
-          .json({
-            message: `Oops! The user "${username}" doesn't seem to exist in our system. Please check the username and try again.`,
-          });
+        res.status(401).json({
+          message: `Oops! The user "${username}" doesn't seem to exist in our system. Please check the username and try again.`,
+        });
 
         return;
       }
@@ -67,7 +61,5 @@ router.get("/profile/:username",(req,res,next)=>{
       return next(error);
     });
 });
-
-
 
 module.exports = router;

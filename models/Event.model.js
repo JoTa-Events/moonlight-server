@@ -3,38 +3,40 @@ const { Schema, model } = require("mongoose");
 const eventSchema = new Schema(
   {
     title: {
-        type: String,
-        required: true,
-        trim:true
+      type: String,
+      required: true,
+      trim: true,
     },
-    date:{
+    date: {
       type: Date,
-      required:true
+      required: true,
     },
     location: {
       type: {
-        type: String, 
-        default: "Point"
+        type: String,
+        default: "Point",
       },
       coordinates: {
-        type: [Number]
+        type: [Number],
       },
-      city: String
+      city: String,
     },
-    description:{
-      type:String,
-      required:true,
-      trim:true
+    description: {
+      type: String,
+      required: true,
+      trim: true,
     },
     image: String,
-    participants: [{ 
-        type: Schema.Types.ObjectId, 
-        ref: 'User'
-    }],
-    author: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'User'
-    }
+    participants: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     timestamps: true,

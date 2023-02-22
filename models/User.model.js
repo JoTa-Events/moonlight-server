@@ -15,16 +15,17 @@ const userSchema = new Schema(
     },
     username: {
       type: String,
-      unique:true,
-      lowecase:true,
-      trim:true,
+      unique: true,
+      lowecase: true,
+      trim: true,
       required: [true, "username is required."],
     },
-    avatar:{
-      type:String,
-      default:'https://res.cloudinary.com/douen1dwv/image/upload/v1674988751/moonlight-default-img/photo-1674094170431-000e0edbc342_qb8ru0.jpg', 
-      trim:true
-    } 
+    avatar: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/douen1dwv/image/upload/v1674988751/moonlight-default-img/photo-1674094170431-000e0edbc342_qb8ru0.jpg",
+      trim: true,
+    },
   },
   {
     timestamps: true,
