@@ -5,6 +5,9 @@ const Event = require('../models/Event.model');
 const User = require('../models/User.model');
 const { isAuthenticated } =require('../middleware/jwt.middleware')
 const fileUploader = require("../config/cloudinary.config");
+const dayjs = require("dayjs");
+
+
 
 // POST: creating a new event
 router.post("/events",isAuthenticated,(req, res, next) => {
@@ -170,5 +173,35 @@ router.delete("/events/:eventId",isAuthenticated, (req, res, next) => {
         res.status(500).json(error);
       });
 });
+
+// PUT updates the date of  all the events by one month 
+router.put("/update-events", (req, res, next) => {
+  Event.find()
+    .then((events) => {
+      const updatedEvents = events.map((event) => {
+        const newDate = dayjs(event.date).add(1, "month").toDate();
+        return { _id: event._id, date: newDate };
+      });
+      const updates = updatedEvents.map((event) => ({
+        updateOne: {
+          filter: { _id: event._id },
+          update: { $set: { date: event.date } },
+        },
+      }));
+      return Event.bulkWrite(updates);
+    })
+    .then((responseEvent) => {
+      console.log("Events updated", responseEvent);
+      res.status(200).json({ message: "Events updated successfully." });
+    })
+    .catch((error) => {
+      console.log(`Error updating all the events`, error);
+      res
+        .status(500)
+        .json({ error: "An error occurred while updating the events." });
+    });
+});
+
+
 
 module.exports = router;
