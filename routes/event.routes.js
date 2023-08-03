@@ -14,36 +14,6 @@ router.post("/events", isAuthenticated, (req, res, next) => {
   const { title, date, location, description, participants, author, image } =
     req.body;
 
-<<<<<<< HEAD
-  Event.create({
-    title,
-    date,
-    location,
-    description,
-    participants,
-    author,
-    image,
-  })
-    .then((responseEvent) => {
-      console.log("event created===============>", responseEvent.title);
-      return Chat.create({ event: responseEvent._id });
-    })
-    .then((responseChat) => {
-      console.log(`This chat has been created`, responseChat._id);
-      res.json(responseChat);
-    })
-    .catch((error) => {
-      if (error?.code === 16755) {
-        res
-          .status(401)
-          .json({ message: "Service not available in this location" });
-      } else {
-        console.log("Error creating new event", error);
-        res.status(500).json(error);
-      }
-    });
-});
-=======
     Event.create({title, date, location, description, participants, author, image})
         .then((responseEvent) => {
             console.log("event created===============>", responseEvent.title)
@@ -64,7 +34,6 @@ router.post("/events", isAuthenticated, (req, res, next) => {
         });
 
 })
->>>>>>> refs/remotes/origin/main
 
 // POST CLOUDINARY: route that will receive an image, send it to Cloudinary via the fileUploader and return the image URL
 router.post("/upload", fileUploader.single("image"), (req, res, next) => {
@@ -129,17 +98,6 @@ router.put("/events/:eventId", isAuthenticated, (req, res, next) => {
         });
       }
     })
-<<<<<<< HEAD
-    .catch((error) => {
-      if (error?.code === 16755) {
-        res
-          .status(401)
-          .json({ message: "Service not available in this location" });
-      } else {
-        console.log("Error updating an event", error);
-        res.status(500).json(error);
-      }
-=======
       .catch(error => {
         if(error?.code === 16755){
             res.status(400).json({ message: "Service not available in this location" });
@@ -147,7 +105,6 @@ router.put("/events/:eventId", isAuthenticated, (req, res, next) => {
             console.log("Error updating an event", error);
             res.status(500).json(error)
         }
->>>>>>> refs/remotes/origin/main
     });
 });
 
@@ -234,9 +191,6 @@ router.delete("/events/:eventId", isAuthenticated, (req, res, next) => {
     });
 });
 
-<<<<<<< HEAD
-module.exports = router;
-=======
 // PUT updates the date of  all the events by one month 
 router.put("/update-events", (req, res, next) => {
   Event.find()
@@ -268,4 +222,3 @@ router.put("/update-events", (req, res, next) => {
 
 
 module.exports = router;
->>>>>>> refs/remotes/origin/main
